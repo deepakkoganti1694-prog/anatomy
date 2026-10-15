@@ -1,0 +1,179 @@
+.xr {
+  --xr-screen: #0b0d0c;
+  --xr-lcd: #b9c2bc;
+  --xr-trace-fill: rgba(212, 212, 212, 0.1);
+  --xr-ray: #e6e6e6;
+  --xr-field: #ffffff;
+  --xr-hot: #ff7a2e;
+  --xr-fil-core: #fff6e0;
+  --xr-fil-body: #ffbe5c;
+  --xr-fil-rim: #e8622a;
+  --xr-spot-core: #fffaf0;
+  --xr-spot-body: #ffd27a;
+  --xr-spot-rim: #ff7a2e;
+  --xr-blend: screen;
+}
+
+.iso[data-theme="light"] .xr {
+  --xr-screen: #e9ece8;
+  --xr-lcd: #3d443f;
+  --xr-trace-fill: rgba(38, 38, 42, 0.08);
+  --xr-ray: #26262a;
+  --xr-field: #26262a;
+  --xr-hot: #d9480f;
+  --xr-fil-core: #ffd66b;
+  --xr-fil-body: #f59f00;
+  --xr-fil-rim: #d9480f;
+  --xr-spot-core: #ffe066;
+  --xr-spot-body: #fd7e14;
+  --xr-spot-rim: #c92a2a;
+  --xr-blend: normal;
+}
+
+.xr .iso-plate {
+  overflow: hidden;
+}
+
+.xr-stage {
+  position: relative;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: crosshair;
+}
+
+.xr-stage:focus-visible {
+  outline: 1px solid var(--anatomy-muted);
+  outline-offset: 6px;
+}
+
+.xr-stage > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.xr-said {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.xr-screen {
+  fill: var(--xr-screen);
+}
+
+.xr-lcd {
+  fill: var(--xr-lcd);
+  font-family: var(--anatomy-mono);
+  font-size: 4.6px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.xr-trace-fill {
+  fill: var(--xr-trace-fill);
+  opacity: var(--xr-trace, 0.35);
+}
+
+.xr-trace {
+  opacity: var(--xr-trace, 0.35);
+}
+
+.xr .xr-glow.iso-halo {
+  filter: none;
+  transform: none;
+  mix-blend-mode: var(--xr-blend);
+}
+
+.xr-glow-filament {
+  fill: url(#xr-filament);
+  opacity: var(--xr-filament, 0);
+}
+
+.xr-glow-spot {
+  fill: url(#xr-spot);
+  opacity: var(--xr-spot, 0);
+}
+
+.xr-stop-fil-core { stop-color: var(--xr-fil-core); }
+.xr-stop-fil-body { stop-color: var(--xr-fil-body); }
+.xr-stop-fil-rim { stop-color: var(--xr-fil-rim); }
+.xr-stop-spot-core { stop-color: var(--xr-spot-core); }
+.xr-stop-spot-body { stop-color: var(--xr-spot-body); }
+.xr-stop-spot-rim { stop-color: var(--xr-spot-rim); }
+
+.xr .xr-track {
+  stroke: var(--xr-hot);
+  stroke-width: 1.4;
+  opacity: var(--xr-track, 0);
+  mix-blend-mode: var(--xr-blend);
+}
+
+.xr-stream {
+  opacity: var(--xr-beam, 0);
+  stroke-width: 0.9;
+}
+
+.xr-stream-halo {
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  opacity: calc(var(--xr-beam, 0) * 0.16);
+}
+
+.xr-electrons {
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: var(--xr-beam, 0);
+}
+
+.xr-cone {
+  opacity: var(--xr-beam, 0);
+}
+
+.xr-cone-fill {
+  fill: var(--xr-ray);
+  opacity: var(--xr-cone, 0.08);
+}
+
+.xr .xr-cone-edge {
+  stroke-width: 0.5;
+  stroke-dasharray: 2.4 2.2;
+}
+
+.xr-front {
+  fill: none;
+  stroke: var(--xr-ray);
+  stroke-width: 0.5;
+}
+
+.xr-field-glow {
+  fill: var(--xr-field);
+  opacity: calc(var(--xr-beam, 0) * var(--xr-dose, 0.2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xr .xr-cone-edge {
+    stroke-dasharray: none;
+  }
+}
+
+.xr-void {
+  fill: var(--anatomy-shade-0);
+  stroke: none;
+}
+
+@media (max-width: 560px) {
+  .xr-stage > svg {
+    width: 114%;
+    margin: 0 -7%;
+  }
+}
