@@ -1,0 +1,276 @@
+.us {
+  --us-gel: #1b2023;
+  --us-fat: #20252a;
+  --us-cyst: #0f1214;
+  --us-calcium: #e4e2dc;
+  --us-couplant: #263038;
+  --us-screen: #050607;
+  --us-lcd: #b7c0bb;
+  --us-lcd-dim: #6f7873;
+  --us-echo: #d4d4d4;
+  --us-pulse: #ffffff;
+}
+
+.iso[data-theme="light"] .us {
+  --us-gel: #eaeef0;
+  --us-fat: #f1f2ef;
+  --us-cyst: #d7dfe3;
+  --us-calcium: #ffffff;
+  --us-couplant: #d8e3ea;
+  --us-screen: #050607;
+  --us-lcd: #b7c0bb;
+  --us-lcd-dim: #6f7873;
+  --us-echo: #26262a;
+  --us-pulse: #000000;
+}
+
+.us .iso-plate {
+  overflow: hidden;
+}
+
+.us-stage {
+  position: relative;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: crosshair;
+}
+
+.us-stage:focus-visible {
+  outline: 1px solid var(--anatomy-muted);
+  outline-offset: 6px;
+}
+
+.us-stage > svg,
+.us-stage > canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.us-stage > .us-canvas,
+.us-stage > .us-front {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.us-gel {
+  fill: var(--us-gel);
+}
+
+.us-fat {
+  fill: var(--us-fat);
+}
+
+.us-cyst {
+  fill: var(--us-cyst);
+}
+
+.us-calcium {
+  fill: var(--us-calcium);
+}
+
+.us-wire {
+  fill: var(--anatomy-hi);
+}
+
+.us-couplant {
+  fill: var(--us-couplant);
+  stroke: var(--anatomy-lo);
+  stroke-width: 0.4;
+}
+
+.us-fan {
+  fill: var(--us-pulse);
+  opacity: 0.025;
+}
+
+.us-flash path {
+  fill: var(--us-pulse);
+  opacity: 0;
+}
+
+.us-beam {
+  fill: var(--us-pulse);
+  opacity: 0.08;
+}
+
+.us-line {
+  opacity: 0.5;
+  stroke-width: 0.4;
+}
+
+.us-screen-ground {
+  fill: var(--us-screen);
+}
+
+.us-lcd {
+  fill: var(--us-lcd);
+  font-family: var(--anatomy-mono);
+  font-size: 4.4px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.us-lcd-small {
+  font-size: 3.6px;
+}
+
+.us-lcd-dim {
+  fill: var(--us-lcd-dim);
+}
+
+.us-lcd-line {
+  fill: none;
+  stroke: var(--us-lcd-dim);
+  stroke-width: 0.35;
+}
+
+.us-lcd-mark {
+  fill: var(--us-lcd);
+}
+
+.us-lcd-tgc {
+  fill: none;
+  stroke: var(--us-lcd-dim);
+  stroke-width: 0.4;
+}
+
+.us-lcd-cursor {
+  fill: none;
+  stroke: var(--us-lcd);
+  stroke-width: 0.35;
+  stroke-dasharray: 1.2 1.6;
+}
+
+.us-pulse {
+  fill: none;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.us-pulse-glow {
+  fill: none;
+  stroke-width: 4.2;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.us-echo {
+  fill: none;
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.us-firing {
+  stroke-width: 1.1;
+}
+
+.us-couplant[data-on] {
+  stroke: var(--us-pulse);
+  stroke-opacity: var(--us-glow, 0);
+}
+
+.us-story {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.us-rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.us-chapter {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  padding: 7px 0 0;
+  cursor: pointer;
+  color: var(--anatomy-muted);
+  font-family: var(--anatomy-mono);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 400ms var(--anatomy-ease);
+}
+
+.us-chapter:focus-visible {
+  outline: 1px solid var(--anatomy-muted);
+  outline-offset: 3px;
+}
+
+.us-num {
+  color: var(--anatomy-lo);
+  transition: color 400ms var(--anatomy-ease);
+}
+
+.us-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.us-bar {
+  display: block;
+  height: 1px;
+  background: var(--anatomy-faint);
+  order: -1;
+}
+
+.us-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--anatomy-strong);
+}
+
+.us-chapter[data-done] .us-bar span {
+  width: 100%;
+  background: var(--anatomy-mid);
+}
+
+.us-chapter[data-on] {
+  color: var(--anatomy-strong);
+}
+
+.us-chapter[data-on] .us-num {
+  color: var(--anatomy-text);
+}
+
+.us-chapter[data-on] .us-bar span {
+  width: calc(var(--us-progress, 0) * 100%);
+}
+
+.us-chapter:hover {
+  color: var(--anatomy-text);
+}
+
+.us-say {
+  margin: 0;
+  min-height: 3.2em;
+  max-width: 72ch;
+  color: var(--anatomy-text);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .us-rail {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    row-gap: 10px;
+  }
+}
