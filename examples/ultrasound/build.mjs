@@ -173,6 +173,7 @@ back.push(Dots([at([LABEL.x + LABEL.w - 4, LABEL.y + 4, 0.8]), at([LABEL.x + LAB
 const TRAY = { x: GEL.x - 12, y: GEL.y - 12, w: GEL.w + 24, d: GEL.d + 20, r: 4 };
 slab("phantom.tray", TRAY, 0, GEL_Z, { tone: "mid" }, { steps: 4, bevel: 0.8, meta: STAND, extra: Dots(k.corners(TRAY, 5).map(([x, y]) => at([x, y, GEL_Z])), { size: 0.45 }) });
 slab("phantom.back", { x: GEL.x - WALL, y: GEL.y - WALL, w: GEL.w + 2 * WALL, d: WALL, r: 1.2 }, GEL_Z, CASE_TOP - GEL_Z, { tone: "mid" }, { bevel: 0.6 });
+const POST_MARKS = [];
 for (const [x, side] of [[GEL.x - WALL, "left"], [GEL.x + GEL.w, "right"]]) {
   const plan = { x, y: GEL.y, w: WALL, d: GEL.d, r: 0.6 };
   slab(`phantom.${side}`, plan, GEL_Z, CASE_TOP - GEL_Z, { tone: "mid" }, {
@@ -180,7 +181,14 @@ for (const [x, side] of [[GEL.x - WALL, "left"], [GEL.x + GEL.w, "right"]]) {
     inner: Ln(k.sideSeam(plan, GEL_TOP, P, 3), { tone: "faint" }),
     extra: side === "right" ? Dots([[x + WALL, GEL.y + 10, GEL_Z + 12], [x + WALL, FRONT - 10, GEL_Z + 12], [x + WALL, GEL.y + 10, CASE_TOP - 10], [x + WALL, FRONT - 10, CASE_TOP - 10]].map(at), { size: 0.45 }) : "",
   });
-  slab(`phantom.${side}-post`, { x, y: FRONT, w: WALL, d: WALL, r: 1.2 }, GEL_Z, CASE_TOP - GEL_Z, { tone: "mid" }, { bevel: 0.6, extra: Dots([at([x + WALL / 2, FRONT + WALL, GEL_Z + 6]), at([x + WALL / 2, FRONT + WALL, CASE_TOP - 6])], { size: 0.45 }) });
+  slab(`phantom.${side}-post`, { x, y: FRONT, w: WALL, d: WALL, r: 1.2 }, GEL_Z, CASE_TOP - GEL_Z, { tone: "mid" }, { bevel: 0.6, extra: Dots([at([x + WALL / 2, FRONT + WALL, GEL_Z + 6]), at([x + WALL / 2, FRONT + WALL, CASE_TOP - 6])], { size: 0.45 }) + (side === "left" ? "<!--post-marks-->" : "") });
+}
+{
+  const x = GEL.x - 1.6;
+  const minor = [];
+  const major = [];
+  for (let d = 0; d <= GEL_TOP - RAIL_TOP - 4; d += 10) (d % 50 ? minor : major).push(k.segment([x, FRONT + WALL, GEL_TOP - d], [x - (d % 50 ? 2 : 3.4), FRONT + WALL, GEL_TOP - d], P));
+  POST_MARKS.push(Ln(k.segment([x, FRONT + WALL, GEL_Z], [x, FRONT + WALL, CASE_TOP], P), { tone: "faint" }), Ln(minor.join(""), { tone: "lo" }), Ln(major.join(""), { tone: "mid" }));
 }
 slab("phantom.rail", { x: GEL.x, y: FRONT, w: GEL.w, d: WALL, r: 0.6 }, GEL_Z, RAIL_TOP - GEL_Z, { tone: "mid" }, { bevel: 0.5 });
 {
@@ -345,12 +353,29 @@ for (const [x, y] of BASE_FEET) {
   put("stand.scanner-foot", [x, y, 3], S(k.cylinder(x, y, 7, 0, BASE_Z[0], P, 24, 0.3), { tone: "lo" }), [A.cylinder(x, y, 7, 0, BASE_Z[0], { name: "stand.scanner-foot", ...STAND })]);
 }
 const PALM = { x: BASE.x + 10, y: BASE.y + BASE.d - 22, w: BASE.w - 20, d: 14, r: 4 };
+const DECK_MARKS = (() => {
+  const out = [];
+  for (const knob of Object.values(KNOBS)) {
+    const ticks = { minor: [], major: [] };
+    for (let index = 0; index <= 10; index++) {
+      const a = (-135 + 27 * index) * DEG;
+      const r0 = knob.r + 3;
+      const r1 = knob.r + (index % 5 ? 4.6 : 5.8);
+      (index % 5 ? ticks.minor : ticks.major).push(k.lineOnTop([knob.x + r0 * Math.sin(a), knob.y - r0 * Math.cos(a)], [knob.x + r1 * Math.sin(a), knob.y - r1 * Math.cos(a)], DECK, P));
+    }
+    out.push(Ln(ticks.minor.join(""), { tone: "lo" }), Ln(ticks.major.join(""), { tone: "mid" }));
+  }
+  const rows = Array.from({ length: TGC.count }, (_, index) => TGC.y0 + index * TGC.step);
+  out.push(Ln(rows.map((y) => k.planOutline({ x: TGC.x0, y: y - 1.2, w: TGC.x1 - TGC.x0, d: 2.4, r: 1.2 }, DECK, P, 3)).join(""), { tone: "lo" }));
+  return out.join("");
+})();
 slab("scanner.base", BASE, BASE_Z[0], BASE_Z[1] - BASE_Z[0], { tone: "mid" }, {
   steps: 8,
   bevel: 1.2,
   inner: Ln(k.sideSeam(BASE, BASE_Z[0] + 9, P, 8), { tone: "faint" }),
   extra:
     Ln(k.planOutline(PALM, DECK, P, 4), { tone: "faint" }) +
+    DECK_MARKS +
     Ln(
       Array.from({ length: 7 }, (_, index) => k.planOutline({ x: 56 + index * 5.6, y: BASE.y + 3, w: 2.4, d: 11, r: 1.2 }, DECK, P, 2)).join(""),
       { tone: "lo" },
@@ -387,14 +412,6 @@ for (const [id, knob] of Object.entries(KNOBS)) {
     inner: k.fadedSvg(ribs, { tone: "lo" }),
     extra: Ln(k.ring(knob.x, knob.y, knob.r - 3.2, DECK + knob.h, P, 32), { tone: "faint" }) + knobPointer(id, knob) + Dots([at([knob.x, knob.y, DECK + knob.h])], { size: 0.5, tone: "hi" }),
   });
-  const ticks = { minor: [], major: [] };
-  for (let index = 0; index <= 10; index++) {
-    const a = (-135 + 27 * index) * DEG;
-    const r0 = knob.r + 3;
-    const r1 = knob.r + (index % 5 ? 4.6 : 5.8);
-    (index % 5 ? ticks.minor : ticks.major).push(k.lineOnTop([knob.x + r0 * Math.sin(a), knob.y - r0 * Math.cos(a)], [knob.x + r1 * Math.sin(a), knob.y - r1 * Math.cos(a)], DECK, P));
-  }
-  back.push(`<g data-deck-ticks>${Ln(ticks.minor.join(""), { tone: "lo" })}${Ln(ticks.major.join(""), { tone: "mid" })}</g>`);
 }
 {
   const F = UPF(BALL.x, BALL.y, 0);
@@ -424,9 +441,6 @@ for (const [id, knob] of Object.entries(KNOBS)) {
   for (const side of [-1, 1]) slab("scanner.ball-key", { x: BALL.x + side * 25 - 5, y: BALL.y - 7, w: 10, d: 14, r: 3 }, DECK, 2.2, { tone: "hi" }, { steps: 3, bevel: 0.4 });
 }
 const TGC_ROWS = Array.from({ length: TGC.count }, (_, index) => TGC.y0 + index * TGC.step);
-back.push(
-  `<g data-tgc-slots>${Ln(TGC_ROWS.map((y) => k.planOutline({ x: TGC.x0, y: y - 1.2, w: TGC.x1 - TGC.x0, d: 2.4, r: 1.2 }, DECK, P, 3)).join(""), { tone: "lo" })}</g>`,
-);
 const TGC_TRAVEL = TGC.x1 - TGC.x0 - TGC.knob - 2;
 const tgcX = (db) => TGC.x0 + 1 + (db / 48) * TGC_TRAVEL;
 TGC_ROWS.forEach((y, index) => {
@@ -472,6 +486,7 @@ const bottle = (() => {
   return curve;
 })();
 
+for (const item of R.items) if (item.svg.includes("<!--post-marks-->")) item.svg = item.svg.replace("<!--post-marks-->", POST_MARKS.join(""));
 A.settle(R, P);
 R.items.sort((a, b) => a.key - b.key);
 

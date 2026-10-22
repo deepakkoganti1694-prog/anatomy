@@ -203,9 +203,10 @@ function setChapter(index) {
     if (at === index) button.setAttribute("aria-current", "step");
     else button.removeAttribute("aria-current");
   });
-  if (index >= 0) say.textContent = CHAPTER_TEXT[index];
+  say.textContent = index >= 0 ? CHAPTER_TEXT[index] : INSPECT_TEXT;
 }
 const CHAPTER_TEXT = D.chapters.map((item) => item.say);
+const INSPECT_TEXT = "One line at a time: move across the phantom or the screen to choose it. Up and down move the focus, which sharpens the wires at that depth.";
 
 function beamPath(theta, focus) {
   const left = [];
